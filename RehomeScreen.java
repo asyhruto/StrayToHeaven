@@ -19,12 +19,12 @@ public class RehomeScreen extends Application {
     @Override
     public void start(Stage primaryStage) {
         
-        // bg setup
+        // background
         VBox root = new VBox(20);
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: #838F58;"); 
 
-        // nav bar same like my friend's dashboard
+        // nav bar 
         HBox navBar = new HBox();
         navBar.setAlignment(Pos.CENTER_LEFT);
         navBar.setPadding(new Insets(10, 20, 10, 20));
