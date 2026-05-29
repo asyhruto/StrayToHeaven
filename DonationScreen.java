@@ -13,18 +13,18 @@ public class DonationScreen extends Application {
     @Override
     public void start(Stage primaryStage) {
         
-        // bg setup
+        // background
         VBox root = new VBox(20); 
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: #838F58;"); 
 
-        // nav bar same like my friend's dashboard
+        // nav bar 
         HBox navBar = new HBox();
         navBar.setAlignment(Pos.CENTER_LEFT);
         navBar.setPadding(new Insets(10, 20, 10, 20));
         navBar.setStyle("-fx-background-color: white; -fx-border-color: #F9D1D9; -fx-border-width: 2; -fx-border-radius: 30; -fx-background-radius: 30;");
 
-        // all the links
+        // nav bar navigation
         HBox linksBox = new HBox(25);
         linksBox.setAlignment(Pos.CENTER_LEFT);
         
@@ -93,7 +93,7 @@ public class DonationScreen extends Application {
         String labelStyle = "-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px;";
         String radioStyle = "-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;";
 
-        // row 1: amount and frequency
+        // amount and frequency
         Label lblAmount = new Label("Donation (RM):");
         lblAmount.setStyle(labelStyle);
         TextField txtAmount = new TextField(); 
@@ -117,7 +117,7 @@ public class DonationScreen extends Application {
         HBox freqBox = new HBox(15, rbOneTime, rbMonthly);
         freqBox.setAlignment(Pos.CENTER_LEFT);
 
-        // row 2: purpose and payment method
+        // purpose and payment method
         Label lblPurpose = new Label("Donation Purpose:");
         lblPurpose.setStyle(labelStyle);
         ComboBox<String> cbPurpose = new ComboBox<>();
@@ -132,7 +132,7 @@ public class DonationScreen extends Application {
         cbPayment.setPromptText("Select payment");
         cbPayment.setStyle(inputStyle);
 
-        // row 3: message for the shelter
+        // message for the shelter
         Label lblMessage = new Label("Message (Optional):");
         lblMessage.setStyle(labelStyle);
         TextArea txtMessage = new TextArea();
