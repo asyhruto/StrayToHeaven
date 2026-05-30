@@ -6,9 +6,9 @@ public class User {
 
     public User(String userName, String userEmail, String userPass, String userID) {
         this.userID = userID;
-        this.name = userName;
-        this.email = userEmail;
-        this.password = password;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPass = password;
     }
 
     public String getName() {
