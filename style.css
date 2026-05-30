@@ -2,16 +2,17 @@
 
 /* Application background color applied to the entire root container AND native root */
 .root, .root-container {
-    -fx-background-color: #D4E5CB; /* Soft Matcha Green */
+    -fx-background-color: #838F58; /* Soft Matcha Green */
 }
 
 /* Styling for the header bar */
 .header-bar {
-    -fx-background-color: #FDFBF7; /* Cream White background */
+    -fx-background-color: #EAECE6; /* Cream White background */
     -fx-background-radius: 15px;
-    -fx-border-color:  #fc6c85;
+    -fx-border-color:  #F9D1D9; /* Light Strawberry Pink border */
     -fx-border-width: 4px;
     -fx-border-radius: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 
 /* Styling for the navigation buttons in the header bar */
@@ -21,16 +22,18 @@
     -fx-font-weight: bold; 
     -fx-font-size: 13px; 
     -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 
 .nav-button:hover {
-    -fx-text-fill: #E07A8A; /* Switches to Strawberry Pink on hover */
+    -fx-text-fill: #838F58; /* Soft Matcha Green */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 
 /* Search Bar Styling */
 .search-field {
     -fx-background-color: #f7fafc; 
-    -fx-border-color: #fc6c85; 
+    -fx-border-color: #F9D1D9; /* Light Strawberry Pink border */
     -fx-border-radius: 15px; 
     -fx-background-radius: 15px; 
     -fx-padding: 5px 12px; 
@@ -39,8 +42,8 @@
 
 /* Round Profile Button */
 .profile-button {
-    -fx-background-color: #FFD8D8; 
-    -fx-text-fill: #fc6c85; 
+    -fx-background-color: #F9D1D9; /* Light Strawberry Pink */
+    -fx-text-fill: #838F58; 
     -fx-background-radius: 50%;
     -fx-min-width: 32px; 
     -fx-min-height: 32px; 
@@ -51,17 +54,17 @@
 }
 
 .profile-button:hover {
-    -fx-background-color: #D4E5CB; 
-    -fx-text-fill: #4a5568;
+    -fx-background-color: #838F58; /* Soft Matcha Green */
+    -fx-text-fill: #FBFBF7; /* Milky White */
 }
 
 /* ==========================================
    SIDE-BY-SIDE PROFILE CARD STYLES
    ========================================== */
 .pet-profile-card {
-    -fx-background-color: #FDFBF7; /* Clean milky white card background */
+    -fx-background-color: #EAECE6; /* Clean milky white card background */
     -fx-background-radius: 20px;
-    -fx-border-color: #fc6c85;
+    -fx-border-color: #F9D1D9; /* Light Strawberry Pink border */
     -fx-border-width: 4px;
     -fx-border-radius: 20px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
@@ -69,51 +72,62 @@
 
 /* Navigation Arrow Buttons */
 .nav-arrow-button {
-    -fx-background-color: #FFD8D8;
-    -fx-text-fill: #fc6c85;
+    -fx-background-color: #EAECE6; /* Clean milky white card background */
+    -fx-text-fill: #838F58; /* Soft Matcha Green */
     -fx-font-weight: bold;
     -fx-background-radius: 10px;
     -fx-padding: 8px 16px;
     -fx-cursor: hand;
+    -fx-border-color: #F9D1D9; /* Border Strawberry */
+    -fx-border-width: 3px;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 .nav-arrow-button:hover {
-    -fx-background-color: #fc6c85;
-    -fx-text-fill: white;
+    -fx-background-color: #F9D1D9; /*light strawberry pink*/
+    -fx-text-fill: #838F58; /*soft matcha green*/
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 
-/* Text Input Fields (Matcha Border) */
+/* Text Input Fields */
 .input-field {
     -fx-background-radius: 5px;
-    -fx-border-color: #7b9a5e;
+    -fx-border-color: #F9D1D9; /* light strawberry pink */
     -fx-border-width: 2px;
     -fx-border-radius: 5px;
 }
 
 /* Dropdown ComboBox (Matcha Green) */
 .combobox {
-    -fx-background-color: #7b9a5e;
+    -fx-background-color: #EAECE6; /* Clean milky white card background */
     -fx-background-radius: 5px;
-    -fx-border-color: #7b9a5e;
+    -fx-border-color: #F9D1D9; /* Light Strawberry Pink border */
     -fx-border-width: 2px;
     -fx-border-radius: 5px;
     -fx-font-weight: bold;
 }
 
 .combobox .label, .combobox .cell {
-    -fx-text-fill: white;
+    -fx-text-fill: #838F58; /* Soft Matcha Green */
     -fx-font-weight: bold;
 }
 
 /* Primary Action Button "Add Pet" */
 .add-button {
-    -fx-background-color: #8EB69B;
+    -fx-background-color: #F9D1D9; /* Light Strawberry Pink */
     -fx-background-radius: 5px;
     -fx-padding: 8px 20px;
-    -fx-text-fill: white;
+    -fx-text-fill: #838F58; /* Soft Matcha Green */
     -fx-font-weight: bold;
     -fx-cursor: hand;
+    -fx-border-color: #EAECE6; /* Outlined border */
+    -fx-border-width: 3px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 
 .add-button:hover {
-    -fx-background-color: #A3C49C;
+    -fx-background-color: #EAECE6; /* Clean milky white card background */
+    -fx-text-fill: #838F58;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
