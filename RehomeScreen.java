@@ -13,78 +13,30 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class RehomeScreen extends Application {
-    
     private String savedImagePath = "No image selected";
 
     @Override
     public void start(Stage primaryStage) {
+        start(primaryStage, null);
+    }
+
+    public void start(Stage primaryStage, UI mainApp) {
         
-        // background
+        // background 
         VBox root = new VBox(20);
-        root.setPadding(new Insets(20));
+        root.setPadding(new Insets(20, 20, 20, 20));
         root.setStyle("-fx-background-color: #838F58;"); 
+        root.setAlignment(Pos.TOP_CENTER);
 
-        // nav bar 
-        HBox navBar = new HBox();
-        navBar.setAlignment(Pos.CENTER_LEFT);
-        navBar.setPadding(new Insets(10, 20, 10, 20));
-        navBar.setStyle("-fx-background-color: white; -fx-border-color: #F9D1D9; -fx-border-width: 2; -fx-border-radius: 30; -fx-background-radius: 30;");
-
-        // all the links
-        HBox linksBox = new HBox(25);
-        linksBox.setAlignment(Pos.CENTER_LEFT);
-        
-        String navBtnStyle = "-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;";
-        Button btnHome = createNavButton("Home", navBtnStyle);
-        Button btnRehome = createNavButton("Rehome", navBtnStyle);
-        Button btnAdopt = createNavButton("Adopt", navBtnStyle);
-        Button btnDonation = createNavButton("Donation", navBtnStyle);
-        Button btnAbout = createNavButton("About", navBtnStyle);
-        
-        // highlight rehome so user know where they are
-        btnRehome.setStyle("-fx-background-color: transparent; -fx-text-fill: #6C8E58; -fx-font-weight: bold; -fx-font-size: 14px; -fx-underline: true;");
-        
-        // make the nav bar actually work
-        
-        // go to donation page
-        btnDonation.setOnAction(e -> {
-            try {
-                DonationScreen donationScreen = new DonationScreen();
-                donationScreen.start(primaryStage); // open in same window
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-        
-
-        linksBox.getChildren().addAll(btnHome, btnRehome, btnAdopt, btnDonation, btnAbout);
-
-        // push search bar to the right
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        HBox rightBox = new HBox(15);
-        rightBox.setAlignment(Pos.CENTER_RIGHT);
-
-        // search bar pink
-        TextField txtSearch = new TextField();
-        txtSearch.setPromptText("🔍 Search...");
-        txtSearch.setStyle("-fx-background-color: white; -fx-border-color: #F9D1D9; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 6 15; -fx-prompt-text-fill: #F89EB4; -fx-text-fill: #F89EB4;");
-
-        // profile circle button
-        Button btnProfile = new Button("...");
-        btnProfile.setStyle("-fx-background-color: #F9D1D9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 50em; -fx-min-width: 35px; -fx-min-height: 35px; -fx-max-width: 35px; -fx-max-height: 35px; -fx-cursor: hand;");
-
-        rightBox.getChildren().addAll(txtSearch, btnProfile);
-        navBar.getChildren().addAll(linksBox, spacer, rightBox);
-
+        // navigation bar with active menu highlighting
+        HBox navBar = Navigation.NavBar(primaryStage, "Rehome", mainApp);
 
         // big pink box for the form
         VBox contentArea = new VBox(25);
+        VBox.setVgrow(contentArea, Priority.ALWAYS);
         contentArea.setAlignment(Pos.CENTER);
         contentArea.setPadding(new Insets(40));
         contentArea.setStyle("-fx-background-color: #F9D1D9; -fx-background-radius: 20;");
-        VBox.setVgrow(contentArea, Priority.ALWAYS); 
 
         Label lblHeader = new Label("Rehome a Pet");
         lblHeader.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;");
@@ -164,7 +116,7 @@ public class RehomeScreen extends Application {
         contentArea.getChildren().addAll(lblHeader, lblSubtitle, imageSection, form, btnSubmit);
         root.getChildren().addAll(navBar, contentArea);
 
-        primaryStage.setScene(new Scene(root, 1000, 700)); 
+        primaryStage.setScene(new Scene(root, 950, 600)); 
         primaryStage.setTitle("Strays To Heaven - Rehome Portal");
         primaryStage.show();
     }
