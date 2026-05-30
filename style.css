@@ -89,6 +89,13 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 
+.form-title {
+    -fx-alignment: center; 
+    -fx-font-size: 16px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: #EAECE6; /* Clean milky white */
+}
+
 /* Text Input Fields */
 .input-field {
     -fx-background-radius: 5px;
