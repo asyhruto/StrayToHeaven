@@ -40,6 +40,9 @@ public class PetManagerGUI extends Application {
     // ImageView for displaying the pet's picture, will be updated dynamically based on the current profile
     private ImageView petImageView = new ImageView();
 
+    // Variable to store the file path of the uploaded pet image, allowing it to be associated with the pet's profile
+    private String savedImagePath;
+
     @Override
     public void start(Stage stage) {
 
@@ -203,8 +206,21 @@ public class PetManagerGUI extends Application {
         profileButton.setOnAction(e -> System.out.println("Opening Profile / Logout Menu..."));
 
         // --- MAIN ASSEMBLY ---
-        VBox root = new VBox(25, headerBar, profileCard, controlRow);
-        root.setPadding(new Insets(25));
+        // The main content area is structured with the header at the top, the profile card in the center, and the control buttons at the bottom, all wrapped in a ScrollPane to ensure accessibility on smaller screens or when content exceeds the fixed size of the window
+        VBox mainContent = new VBox(25, headerBar, profileCard, controlRow);
+        mainContent.setPadding(new Insets(10, 25, 25, 25));
+        mainContent.getStyleClass().add("root-container");
+
+        // Wrap the main content in a ScrollPane to ensure accessibility on smaller screens or when content exceeds the fixed size of the window
+        ScrollPane mainScrollPane = new ScrollPane(mainContent);
+        mainScrollPane.setFitToWidth(true); // Allows the content to expand horizontally to fill the available width of the ScrollPane, preventing horizontal scrolling and ensuring a cleaner user experience
+        mainScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        mainScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        mainScrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+
+        // The root container for the entire application, which allows the main content to utilize the full height of the window and provides a more immersive experience when viewing pet profiles. This also helps maintain a consistent layout as the window is resized.
+        VBox root = new VBox(10, mainScrollPane);
+        VBox.setVgrow(mainScrollPane, Priority.ALWAYS); // Ensures the ScrollPane expands to fill available vertical space, allowing the main content to utilize the full height of the window and providing a more immersive experience when viewing pet profiles. This also helps maintain a consistent layout as the window is resized.
         root.getStyleClass().add("root-container");
 
         Scene scene = new Scene(root, 850, 550);
@@ -296,6 +312,32 @@ public class PetManagerGUI extends Application {
         titleLabel.setAlignment(Pos.CENTER);
         titleLabel.setStyle("-fx-alignment: center; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #EAECE6;");
 
+        // upload pet picture
+        ImageView petImageView = new ImageView();
+        petImageView.setFitWidth(150); petImageView.setFitHeight(150);
+        petImageView.setPreserveRatio(true);
+        
+        // The image box is styled to match the profile card for a cohesive look, and includes a button to allow users to upload a picture of the pet they are registering
+        StackPane imageBox = new StackPane(petImageView);
+        imageBox.setPrefSize(160, 160); imageBox.setMaxSize(160, 160);
+        imageBox.getStyleClass().add("pet-profile-card"); // Reuse the same styling as the profile card for a cohesive look
+        
+        // Button to trigger the file chooser for uploading a pet picture, styled to match the application's design language
+        Button btnUpload = new Button("Add Picture");
+        btnUpload.getStyleClass().add("add-button");
+        btnUpload.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+            File file = fileChooser.showOpenDialog(formStage);
+            if (file != null) {
+                savedImagePath = file.getAbsolutePath();
+                petImageView.setImage(new Image(file.toURI().toString()));
+            }
+        });
+        // Layout for the image upload section, centering the image preview and upload button together
+        VBox imageSection = new VBox(10, imageBox, btnUpload);
+        imageSection.setAlignment(Pos.CENTER);
+        
         // Input fields for pet details, styled with CSS classes for a cohesive look
         TextField idInput = new TextField();
         idInput.setPromptText("Pet ID (e.g., C001)");
@@ -354,7 +396,7 @@ public class PetManagerGUI extends Application {
         });
 
         // Layout for the form, using a VBox to stack elements vertically with consistent spacing and padding
-        VBox formRoot = new VBox(15, titleLabel, idInput, ageInput, breedInput, genderInput, traitsInput, saveButton);
+        VBox formRoot = new VBox(15, titleLabel, imageSection, idInput, ageInput, breedInput, genderInput, traitsInput, saveButton);
         formRoot.setPadding(new Insets(30));
         formRoot.getStyleClass().add("root-container");
 
