@@ -5,59 +5,6 @@
     -fx-background-color: #838F58; /* Soft Matcha Green */
 }
 
-/* Styling for the header bar */
-.header-bar {
-    -fx-background-color: #EAECE6; /* Cream White background */
-    -fx-background-radius: 15px;
-    -fx-border-color:  #F9D1D9; /* Light Strawberry Pink border */
-    -fx-border-width: 4px;
-    -fx-border-radius: 15px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
-}
-
-/* Styling for the navigation buttons in the header bar */
-.nav-button {
-    -fx-background-color: transparent; 
-    -fx-text-fill: #4A5568; 
-    -fx-font-weight: bold; 
-    -fx-font-size: 13px; 
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
-}
-
-.nav-button:hover {
-    -fx-text-fill: #838F58; /* Soft Matcha Green */
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
-}
-
-/* Search Bar Styling */
-.search-field {
-    -fx-background-color: #f7fafc; 
-    -fx-border-color: #F9D1D9; /* Light Strawberry Pink border */
-    -fx-border-radius: 15px; 
-    -fx-background-radius: 15px; 
-    -fx-padding: 5px 12px; 
-    -fx-font-size: 12px;
-}
-
-/* Round Profile Button */
-.profile-button {
-    -fx-background-color: #F9D1D9; /* Light Strawberry Pink */
-    -fx-text-fill: #838F58; 
-    -fx-background-radius: 50%;
-    -fx-min-width: 32px; 
-    -fx-min-height: 32px; 
-    -fx-max-width: 32px; 
-    -fx-max-height: 32px; 
-    -fx-font-size: 14px; 
-    -fx-cursor: hand;
-}
-
-.profile-button:hover {
-    -fx-background-color: #838F58; /* Soft Matcha Green */
-    -fx-text-fill: #FBFBF7; /* Milky White */
-}
-
 /* ==========================================
    SIDE-BY-SIDE PROFILE CARD STYLES
    ========================================== */
