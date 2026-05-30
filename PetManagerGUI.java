@@ -1,5 +1,6 @@
 package com.example;
 
+import java.io.File;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -22,7 +23,6 @@ import javafx.util.Duration;
 public class PetManagerGUI extends Application {
 
     // Core data management and state tracking variables
-    private PetManager petmanager = new PetManager();
     private ObservableList<Pet> data = FXCollections.observableArrayList();
     private int currentPetIndex = 0; // Tracks which animal is currently being displayed
 
@@ -37,104 +37,30 @@ public class PetManagerGUI extends Application {
     // Container for the profile card elements
     private HBox profileCard = new HBox(30);
 
-    // ImageView for displaying the pet's picture, will be updated dynamically based on the current profile
+    // ImageView for displaying the pet's picture on the profile card
     private ImageView petImageView = new ImageView();
 
     // Variable to store the file path of the uploaded pet image, allowing it to be associated with the pet's profile
     private String savedImagePath;
 
-    @Override
-    public void start(Stage stage) {
+    
+    public void start(Stage stage, UI mainApp) {
 
         stage.setTitle("Strays To Heaven - Pet Management Dashboard");
 
-        // --- HEADER BAR SYSTEM ---
-        HBox headerBar = new HBox(20);
-        headerBar.setPadding(new Insets(15, 15, 15, 15));
-        headerBar.setAlignment(javafx.geometry.Pos.CENTER);
-        headerBar.getStyleClass().add("header-bar");
-
-        // Create a layout container for the logo
-        HBox logoContainer = new HBox();
-        logoContainer.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-
-        try {
-            // Tells Java to look directly inside the compiled source folder for the logo asset
-            java.net.URL logoUrl = getClass().getResource("STHLogo.jpg");
-            
-            // If the logo file is found, create an ImageView and add it to the header
-            if (logoUrl != null) {
-                Image logoImg = new Image(logoUrl.toExternalForm());
-                ImageView logoView = new ImageView(logoImg);
-                
-                // Keep the layout proportional and neat within your white header line
-                logoView.setFitHeight(40); // Matches standard aesthetic header height
-                logoView.setPreserveRatio(true);
-                
-                logoContainer.getChildren().add(logoView);
-
-                // Debugging output to confirm the logo was loaded successfully
-            } else {
-                System.err.println("Could not find STHLogo.jpg inside the src package folder!");
-                // Fallback text if the file is physically missing
-                Label fallbackLabel = new Label("✨ STH");
-                fallbackLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #838F58; -fx-font-size: 16px;");
-                logoContainer.getChildren().add(fallbackLabel);
-            }
-        } catch (Exception e) {
-            System.err.println("Error rendering logo graphic: " + e.getMessage());
-        }
-
-        // --- CENTER NAVIGATION MENU ---
-        HBox centerMenu = new HBox(15);
-        centerMenu.setAlignment(Pos.CENTER);
-        
-        // Create navigation buttons with consistent styling
-        Button navHome = new Button("Home");
-        Button navRehome = new Button("Rehome");
-        Button navAdopt = new Button("Adopt");
-        Button navDonation = new Button("Donation");
-        Button navAbout = new Button("About");
-
-        // Apply a common CSS class to all navigation buttons for uniform styling
-        navHome.getStyleClass().add("nav-button");
-        navRehome.getStyleClass().add("nav-button");
-        navAdopt.getStyleClass().add("nav-button");
-        navDonation.getStyleClass().add("nav-button");
-        navAbout.getStyleClass().add("nav-button");
-
-        centerMenu.getChildren().addAll(navHome, navRehome, navAdopt, navDonation, navAbout);
-
-        // --- RIGHT-SIDE CONTROLS (SEARCH + PROFILE) ---
-        Region spacer1 = new Region();
-        HBox.setHgrow(spacer1, Priority.ALWAYS);
-        Region spacer2 = new Region();
-        HBox.setHgrow(spacer2, Priority.ALWAYS);
-
-        HBox rightControls = new HBox(12);
-        rightControls.setAlignment(Pos.CENTER_RIGHT);
-
-        TextField searchField = new TextField();
-        searchField.setPromptText("🔍 Search...");
-        searchField.getStyleClass().add("search-field");
-        searchField.setPrefWidth(120);
-
-        Button profileButton = new Button("👤");
-        profileButton.getStyleClass().add("profile-button");
-        
-        rightControls.getChildren().addAll(searchField, profileButton);
-        headerBar.getChildren().addAll(logoContainer, spacer1, centerMenu, spacer2, rightControls);
+        HBox headerBar = Navigation.NavBar(stage, "Home", mainApp);
 
         // --- PRELOADED DUMMY DATA ---
         Pet pet1 = new Pet("C001", 2, "British Shorthair", "Female", "Calm, Friendly", "Available");
         Pet pet2 = new Pet("D001", 1, "Golden Retriever", "Male", "Playful, Energetic", "Available");
         Pet pet3 = new Pet("C002", 4, "Persian", "Male", "Lazy, Fluffy", "Available");
 
-        petmanager.addPet(pet1);
-        petmanager.addPet(pet2);
-        petmanager.addPet(pet3);
+        PetManager.addPet(pet1);
+        PetManager.addPet(pet2);
+        PetManager.addPet(pet3);
 
-        data.addAll(pet1, pet2, pet3);
+        data.clear();
+        data.addAll(PetManager.getAllPets());
 
         // --- SIDE-BY-SIDE PROFILE CARD CONTAINER ---
         profileCard.getStyleClass().add("pet-profile-card");
@@ -198,13 +124,7 @@ public class PetManagerGUI extends Application {
         // Layout to arrange the pagination and registration elements cleanly
         HBox controlRow = new HBox(20, prevButton, openAddFormButton, nextButton);
         controlRow.setAlignment(Pos.CENTER);
-
-        // --- NAVIGATION WORKFLOW SYSTEM ---
-        navRehome.setOnAction(e -> System.out.println("Transferring to Nur Arisa Balqis's Rehome Page..."));
-        navDonation.setOnAction(e -> System.out.println("Transferring to Donation Page..."));
-        navAdopt.setOnAction(e -> System.out.println("Transferring to Farhana's Adoption Request Page..."));
-        profileButton.setOnAction(e -> System.out.println("Opening Profile / Logout Menu..."));
-
+        
         // --- MAIN ASSEMBLY ---
         // The main content area is structured with the header at the top, the profile card in the center, and the control buttons at the bottom, all wrapped in a ScrollPane to ensure accessibility on smaller screens or when content exceeds the fixed size of the window
         VBox mainContent = new VBox(25, headerBar, profileCard, controlRow);
@@ -276,13 +196,13 @@ public class PetManagerGUI extends Application {
 
             // Hierarchical image loading system:
             // First checks for specific hardcoded images based on known pet IDs, then falls back to a dynamic naming convention, and finally handles missing assets gracefully
-            String imageName = "cat1.jpg"; // Default fallback
-            if (pet.getPetID().equalsIgnoreCase("C001")) imageName = "cat1.jpg";
-            else if (pet.getPetID().equalsIgnoreCase("D001")) imageName = "dog1.jpg";
-            else if (pet.getPetID().equalsIgnoreCase("C002")) imageName = "cat2.jpg";
+            String imageName = "images/cat1.jpg"; // Default fallback
+            if (pet.getPetID().equalsIgnoreCase("C001")) imageName = "images/cat1.jpg";
+            else if (pet.getPetID().equalsIgnoreCase("D001")) imageName = "images/dog1.jpg";
+            else if (pet.getPetID().equalsIgnoreCase("C002")) imageName = "images/cat2.jpg";
             else {
                 // Tries to find an image matching the new pet's ID (e.g., c003.jpg)
-                imageName = pet.getPetID().toLowerCase() + ".jpg"; 
+                imageName = "images/" + pet.getPetID().toLowerCase() + ".jpg"; 
             }
 
             try {
@@ -310,7 +230,7 @@ public class PetManagerGUI extends Application {
         Label titleLabel = new Label("ANIMAL REGISTRATION FORM");
         titleLabel.setMaxWidth(Double.MAX_VALUE);
         titleLabel.setAlignment(Pos.CENTER);
-        titleLabel.setStyle("-fx-alignment: center; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #EAECE6;");
+        titleLabel.getStyleClass().add("form-title");
 
         // upload pet picture
         ImageView petImageView = new ImageView();
@@ -337,7 +257,7 @@ public class PetManagerGUI extends Application {
         // Layout for the image upload section, centering the image preview and upload button together
         VBox imageSection = new VBox(10, imageBox, btnUpload);
         imageSection.setAlignment(Pos.CENTER);
-        
+
         // Input fields for pet details, styled with CSS classes for a cohesive look
         TextField idInput = new TextField();
         idInput.setPromptText("Pet ID (e.g., C001)");
@@ -382,7 +302,7 @@ public class PetManagerGUI extends Application {
                         "Available"
                 );
 
-                petmanager.addPet(newPet);
+                PetManager.addPet(newPet);
                 data.add(newPet);
                 
                 // Set index to point directly to the newly added animal profile
@@ -395,13 +315,20 @@ public class PetManagerGUI extends Application {
             }
         });
 
-        // Layout for the form, using a VBox to stack elements vertically with consistent spacing and padding
-        VBox formRoot = new VBox(15, titleLabel, imageSection, idInput, ageInput, breedInput, genderInput, traitsInput, saveButton);
-        formRoot.setPadding(new Insets(30));
-        formRoot.getStyleClass().add("root-container");
+        // Layout for the form content, using a VBox to stack elements vertically with consistent spacing and padding
+        VBox formContent = new VBox(15, titleLabel, imageSection, idInput, ageInput, breedInput, genderInput, traitsInput, saveButton);
+        formContent.setPadding(new Insets(20));
+        formContent.getStyleClass().add("root-container");
 
-        // Create the scene for the form and apply the same CSS styling as the main application for a cohesive user experience
-        Scene formScene = new Scene(formRoot, 350, 360);
+        // Wrap the form content in a ScrollPane to ensure accessibility on smaller screens or when content exceeds the fixed size of the form window
+        ScrollPane formScrollPane = new ScrollPane(formContent);
+        formScrollPane.setFitToWidth(true);
+        formScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        formScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        formScrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+
+        // Set a fixed size for the form pop-up, as the ScrollPane will handle any overflow of content gracefully
+        Scene formScene = new Scene(formScrollPane, 380, 450); // Set a fixed size for the form pop-up, as the ScrollPane will handle any overflow of content gracefully
         
         // Load the external CSS file for styling the form, ensuring it matches the main application's design
         java.net.URL cssUrl = getClass().getResource("style.css");
@@ -417,5 +344,11 @@ public class PetManagerGUI extends Application {
     // Main method to launch the JavaFX application
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void start(Stage arg0) throws Exception {
+        // This method is required to satisfy the Application class contract, but the actual application logic is handled in the overloaded start method that accepts a UI instance. This allows for better integration with the overall application structure and navigation system.
+        start(arg0, null);
     }
 }
