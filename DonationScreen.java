@@ -130,7 +130,7 @@ public class DonationScreen extends Application {
                 // create dummy user and process donation
                 User dummy = new User("Guest", "guest@mail.com", "pass", "U001");
                 // just putting today's date manually for the backend
-                Donation donation = new Donation("D100", dummy, amount, "2024-05-29");
+                Donation donation = new Donation("D100", dummy, amount, "2026-05-29");
                 donation.processDonation();
                 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
