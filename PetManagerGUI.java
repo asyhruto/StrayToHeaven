@@ -75,7 +75,7 @@ public class PetManagerGUI extends Application {
                 System.err.println("Could not find STHLogo.jpg inside the src package folder!");
                 // Fallback text if the file is physically missing
                 Label fallbackLabel = new Label("✨ STH");
-                fallbackLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #fc6c85; -fx-font-size: 16px;");
+                fallbackLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #838F58; -fx-font-size: 16px;");
                 logoContainer.getChildren().add(fallbackLabel);
             }
         } catch (Exception e) {
@@ -150,12 +150,12 @@ public class PetManagerGUI extends Application {
         HBox.setHgrow(textContainer, Priority.ALWAYS);
 
         // Style the text elements with a consistent and visually appealing design
-        idLabel.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #fc6c85;");
+        idLabel.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #838f58;");
         breedLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4A5568;");
         ageLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #718096; -fx-font-weight: bold;");
         genderLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #718096; -fx-font-weight: bold;");
         traitsLabel.setStyle("-fx-font-size: 16px; -fx-font-style: italic; -fx-text-fill: #2D3748;");
-        statusLabel.setStyle("-fx-background-color: #8EB69B; -fx-text-fill: white; -fx-padding: 6px 16px; -fx-background-radius: 10px; -fx-font-weight: bold;");
+        statusLabel.setStyle("-fx-background-color: #F9D1D9; -fx-text-fill: #838F58; -fx-padding: 6px 16px; -fx-background-radius: 10px; -fx-font-weight: bold;");
 
         // Assemble text elements together
         textContainer.getChildren().addAll(idLabel, breedLabel, ageLabel, genderLabel, traitsLabel, statusLabel);
@@ -291,8 +291,10 @@ public class PetManagerGUI extends Application {
         formStage.initOwner(parentStage);
 
         // Form fields with consistent styling and clear prompts for user input
-        Label titleLabel = new Label("Animal Registration Form");
-        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4A5568;");
+        Label titleLabel = new Label("ANIMAL REGISTRATION FORM");
+        titleLabel.setMaxWidth(Double.MAX_VALUE);
+        titleLabel.setAlignment(Pos.CENTER);
+        titleLabel.setStyle("-fx-alignment: center; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #EAECE6;");
 
         // Input fields for pet details, styled with CSS classes for a cohesive look
         TextField idInput = new TextField();
