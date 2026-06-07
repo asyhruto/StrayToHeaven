@@ -4,11 +4,16 @@ public class User {
     private String userEmail;
     private String userPass;
 
-    public User(String userName, String userEmail, String userPass, String userID) {
+    public User(String userID, String userName, String userEmail, String userPass) {
         this.userID = userID;
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPass = userPass;
+    }
+    
+    //returns boolean as we use boolean for login
+    public boolean login(String email, String password){
+        return this.userEmail.equals(email) && this.userPass.equals(password);
     }
 
     public String getName() {
@@ -25,14 +30,6 @@ public class User {
 
     public String getUserID() {
         return userID;
-    }
-
-    public void login(String email, String password) {
-        if (this.userEmail.equals(email) && this.userPass.equals(password)) {
-            System.out.println("Login successful!"); //add function to redirect to the home page, this is only a placeholder
-        } else {
-            System.out.println("Invalid email or password."); // add function call for empty input box so user can try again, just placeholder
-        }
     }
 
     public void getDetails() {
