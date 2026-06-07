@@ -224,12 +224,12 @@ public class UI extends Application {
         petDisplay.setAlignment(Pos.CENTER);
         
         String[] catImg = {
-            "file:C:\\Users\\user\\Pictures\\cat1.jfif",
-            "file:C:\\Users\\user\\Pictures\\cat2.jfif",
-            "file:C:\\Users\\user\\Pictures\\cat3.jfif",
-            "file:C:\\Users\\user\\Pictures\\cat4.jfif",
-            "file:C:\\Users\\user\\Pictures\\cat5.jfif",
-            "file:C:\\Users\\user\\Pictures\\cat6.jfif"
+            "images/cat1.jfif",
+            "images/cat2.jfif",
+            "images/cat3.jfif",
+            "images/cat4.jfif",
+            "images/cat5.jfif",
+            "images/cat6.jfif"
         };
         for (int i = 0; i < 6; i++){
             VBox BubblePet = new VBox(8);
