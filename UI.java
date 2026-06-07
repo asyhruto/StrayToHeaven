@@ -37,8 +37,7 @@ import javafx.scene.text.Text;
 import static javafx.scene.text.TextAlignment.CENTER;
 import javafx.stage.Stage;
 
-public class UI extends Application{
-    
+public class UI extends Application {
     public static void main(String[] args){
         launch(args);
     }
@@ -56,9 +55,6 @@ public class UI extends Application{
     private final String MATCHA_BG = "-fx-background-color: #838F58;";
     private final String PINK = "-fx-background-color: #F9D1D9; -fx-text-fill: #333333; -fx-font-weight: bold;";
     private final String MATCHA = "-fx-background-color: #838F58; -fx-text-fill: white; -fx-font-weight: bold;";
-    
-    //logo
-    private final String LOGO = "file:C:\\Users\\user\\Pictures\\logoStrayToHeaven.jpg";
     
     @Override
     public void start(Stage primaryStage){
@@ -86,7 +82,14 @@ public class UI extends Application{
         
         catCont.setStyle("-fx-background-radius: 25; -fx-border-radius: 25; -fx-overflow-piece: hidden;");
         
-        Image catContImg = new Image("file:C:\\Users\\user\\Pictures\\catContainer.jfif");
+        // Load the cat container image
+        Image catContImg = null;
+        try {
+            catContImg = new Image(getClass().getResourceAsStream("images/catContainer.jfif"));
+        } catch (Exception e) {
+            System.out.println("Warning: catContainer.jfif not found in images/ folder!");
+        }
+        
         ImageView catView = new ImageView(catContImg);
         catView.setFitWidth(340);
         catView.setFitHeight(380);
@@ -108,13 +111,6 @@ public class UI extends Application{
         
         loginForm.setStyle("-fx-background-color: rgba(249, 209, 217, 0.9); -fx-background-radius: 0 25 25 0;");
         loginForm.setAlignment(Pos.CENTER_LEFT);
-        
-        Image logoImg = new Image(LOGO);
-        ImageView logoView = new ImageView(logoImg);
-        logoView.setFitWidth(35);
-        logoView.setPreserveRatio(true);
-        loginForm.getChildren().add(logoView);
-        VBox.setMargin(logoView, new Insets(0, 0, -5, 0));
         
         Text formTitle = new Text("Login");
         formTitle.setFont(Font.font("Tahoma", FontWeight.BOLD, 28));
@@ -187,51 +183,7 @@ public class UI extends Application{
         BorderPane mainRoot = new BorderPane();
         mainRoot.setStyle(MATCHA_BG);
         
-        HBox navBar = new HBox(20);
-        navBar.setPadding(new Insets(15, 25, 15, 25));
-        navBar.setAlignment(Pos.CENTER_LEFT);
-        navBar.setStyle("-fx-background-color: white; -fx-background-radius: 30; -fx-border-radius: 30; -fx-border-color: #F9D1D9; -fx-border-width: 2;");
-        HBox.setMargin(navBar, new Insets(20, 20, 0, 20));
-        
-        Image logoImg = new Image(LOGO);
-        ImageView logoView = new ImageView(logoImg);
-        logoView.setFitHeight(32);
-        logoView.setPreserveRatio(true);
-        navBar.getChildren().add(logoView);
-        
-        Label userDashboard = new Label("USER DASHBOARD");
-        userDashboard.setFont(Font.font("Tahoma", FontWeight.BOLD, 16));
-        userDashboard.setStyle("-fx-text-fill: #838F58");
-        
-        Button btHome = new Button("Home");
-        Button btRehome = new Button("Rehome");
-        Button btAdopt = new Button("Adopt");
-        Button btDonate = new Button("Donation");
-        Button btAbout = new Button("About");
-        Button btLogout = new Button("Logout");
-        
-        String navLinkStyle = "-fx-background-color: transparent; -fx-text-fill: #4A4A4A; -fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand;";
-        Button[] menu = {btHome, btAdopt, btRehome, btDonate, btAbout, btLogout};
-        for (Button btn : menu){
-            btn.setStyle(navLinkStyle);
-        }
-        
-        btHome.setStyle("-fx-background-color: transparent; -fx-text-fill: #838F58; -fx-font-weight: bold; -fx-font-size: 13px; -fx-underline: true;");
-        
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        
-        HBox rightNav = new HBox(12);
-        rightNav.setAlignment(Pos.CENTER_RIGHT);
-        
-        Button search = new Button("🔍");
-        search.setStyle("-fx-background-color: transparent; -fx-text-fill: #838F58; -fx-font-size: 14px; -fx-cursor: hand;");
-        
-        Button profile = new Button("👤");
-        profile.setStyle("-fx-background-color: #F9D1D9; -fx-text-fill: #333333; -fx-background-radius: 50em; -fx-min-width: 32px; -fx-min-height: 32px; -fx-max-width: 32px; -fx-max-height: 32px; -fx-cursor: hand;");
-        
-        rightNav.getChildren().addAll(search, profile);
-        navBar.getChildren().addAll(btHome, btRehome, btAdopt, btDonate, btAbout, btLogout, spacer, rightNav);
+        HBox navBar = Navigation.NavBar(window, "Home", this);
         
         VBox topCont = new VBox();
         topCont.setPadding(new Insets(15, 15, 0, 15));
@@ -279,7 +231,6 @@ public class UI extends Application{
             "file:C:\\Users\\user\\Pictures\\cat5.jfif",
             "file:C:\\Users\\user\\Pictures\\cat6.jfif"
         };
-        
         for (int i = 0; i < 6; i++){
             VBox BubblePet = new VBox(8);
             BubblePet.setAlignment(Pos.CENTER);
@@ -287,11 +238,14 @@ public class UI extends Application{
             Circle petCircle = new Circle(38);
             
             try{
-                Image catPic = new Image(catImg[i]);
+                // Attempt to load the image for the pet profile
+                Image catPic = new Image(getClass().getResourceAsStream(catImg[i]));
                 javafx.scene.paint.ImagePattern ip = new javafx.scene.paint.ImagePattern(catPic);
                 petCircle.setFill(ip);
             } catch (Exception e){
+                // If the image fails to load, fill the circle with a solid color and print a warning message
                 petCircle.setFill(Color.web(PINK));
+                System.out.println("Warning: Could not find image " + catImg[i]);
             }
             
             BubblePet.getChildren().addAll(petCircle);
@@ -311,14 +265,7 @@ public class UI extends Application{
         footer.getChildren().add(footerContact);
         mainRoot.setBottom(footer);
         
-        btHome.setOnAction((ActionEvent e) -> {
-            DashboardUI();
-        });
         
-        btRehome.setOnAction((ActionEvent e) -> {
-            RehomeScreen rehomePage = new RehomeScreen();
-            rehomePage.start(window);
-        });
         
         adoptNow.setOnAction((ActionEvent e) -> {
             AdoptionUI();
@@ -326,20 +273,9 @@ public class UI extends Application{
         
         viewPetList.setOnAction((ActionEvent e) -> {
             PetManagerGUI petPage = new PetManagerGUI();
-            petPage.start(window);
+            petPage.start(window, this);
         });
         
-        btAdopt.setOnAction((ActionEvent e) -> {
-            AdoptionUI();
-        });
-        
-        btDonate.setOnAction((ActionEvent e) -> {
-            DonationUI();
-        });
-        
-        btLogout.setOnAction((ActionEvent e) -> {
-            LoginUI();
-        });
         
         window.setScene(new Scene(mainRoot));
         window.setWidth(950);
@@ -432,7 +368,7 @@ public class UI extends Application{
     
     public void DonationUI(){
         DonationScreen donationPage = new DonationScreen();
-        donationPage.display(window);
+        donationPage.start(window, this);
     }
     
     public void AdminDashboardUI(){
