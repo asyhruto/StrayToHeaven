@@ -1,13 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.mycompany.StrayToHeaven;
-
-/**
- *
- * @author user
- */
+package com.example;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -224,13 +215,14 @@ public class UI extends Application {
         petDisplay.setAlignment(Pos.CENTER);
         
         String[] catImg = {
-            "images/cat1.jfif",
-            "images/cat2.jfif",
-            "images/cat3.jfif",
-            "images/cat4.jfif",
-            "images/cat5.jfif",
-            "images/cat6.jfif"
+            "images/animalDisp1.jfif",
+            "images/animalDisp2.jfif",
+            "images/animalDisp3.jfif",
+            "images/animalDisp4.jfif",
+            "images/animalDisp5.jfif",
+            "images/animalDisp6.jfif"
         };
+        
         for (int i = 0; i < 6; i++){
             VBox BubblePet = new VBox(8);
             BubblePet.setAlignment(Pos.CENTER);
