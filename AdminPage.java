@@ -14,10 +14,10 @@ import javafx.stage.Modality;
 
 
 public class AdminPage extends Application {
-    
+
     private ObservableList<String[]> userList = FXCollections.observableArrayList();
     private ObservableList<String[]> requestList = FXCollections.observableArrayList();
-
+    
     private static final String GREEN = "-fx-background-color: #838F58;"
         + " -fx-text-fill: white; "
         + "-fx-font-weight: bold;"
@@ -42,67 +42,7 @@ public class AdminPage extends Application {
         VBox root = new VBox(20);
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: #838F58;");
-        
-        // nav bar 
-        HBox navBar = new HBox();
-        navBar.setAlignment(Pos.CENTER_LEFT);
-        navBar.setPadding(new Insets(10,20,10,20));
-        navBar.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-border-color: #F9D1D9;" +
-                "-fx-border-width: 2;" +
-                "-fx-border-radius: 30;" +
-                "-fx-background-radius: 30;");
-        
-        HBox linkBox = new HBox(25);
-        String navBtnStyle = 
-                "-fx-background-color: transparent;" +
-                "-fx-text-fill: #333333;" +
-                "-fx-font-weight: bold;" +
-                "-fx-font-size: 14px;" +
-                "-fx-cursor: hand;";
-        
-        // in navBar button(s)
-        Button btnHome = createNavButton("Home", navBtnStyle);
-        Button btnRehome = createNavButton("Rehome", navBtnStyle);
-        Button btnAdopt = createNavButton("Adoption" , navBtnStyle);
-        Button btnDonation = createNavButton("Donation", navBtnStyle);
-        Button btnAdmin = createNavButton(
-                        "Admin", 
-                        "-fx-background-color: transparent;" +
-                        "-fx-text-fill: #838F58;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-font-size: 14px;" +
-                        "-fx-underline: true;");
-        
-        linkBox.getChildren().addAll(
-                btnHome, 
-                btnRehome, 
-                btnAdopt,
-                btnDonation,
-                btnAdmin);
-        
-        Region spacer = new Region();
-       
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        
-        TextField txtSearch = new TextField();
-        txtSearch.setPromptText("🔍 Search...");
-        txtSearch.setStyle(
-                        "-fx-background-color: white;" +
-                        "-fx-border-color: #F9D1D9;" +
-                        "-fx-border-radius: 20;" +
-                        "-fx-background-radius: 20;");
-        
-        Button btnProfile = new Button("👤");
-        btnProfile.setStyle(
-                        "-fx-background-color: #F9D1D9;" +
-                        "-fx-text-fill: white;" +  
-                        "-fx-background-radius: 50em;");
-        
-        HBox rightBox = new HBox(15);
-        rightBox.getChildren().addAll(txtSearch,btnProfile);
-        navBar.getChildren().addAll(linkBox, spacer, rightBox);
+        root.setAlignment(Pos.TOP_CENTER);
         
         // dashboard Admin content
         
@@ -117,14 +57,12 @@ public class AdminPage extends Application {
         lblTitle.setStyle(
                 "-fx-font-size: 28px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: white;");
+                "-fx-text-fill: #838F58;");
         
         // Admin's options of buttons 
-        
         Button manageUsersBtn = new Button("Manage Users");
         Button managePetsBtn = new Button("Manage Pets");
         Button manageReqBtn = new Button("Manage Requests");
-        Button manageDonationBtn = new Button("View Donations");
         
         String adminBtnStyle = 
                 "-fx-background-color: #838F58;" +
@@ -137,7 +75,6 @@ public class AdminPage extends Application {
         manageUsersBtn.setStyle(adminBtnStyle);
         managePetsBtn.setStyle(adminBtnStyle);
         manageReqBtn.setStyle(adminBtnStyle);
-        manageDonationBtn.setStyle(adminBtnStyle);
         
         // actions of these buttons 
         
@@ -150,19 +87,14 @@ public class AdminPage extends Application {
         manageReqBtn.setOnAction(e -> 
                 openReq(primaryStage));
         
-        manageDonationBtn.setOnAction(e -> 
-                openPage("View Donations"));
         
         content.getChildren().addAll(
                 lblTitle, 
                 manageUsersBtn,
                 managePetsBtn,
-                manageReqBtn,
-                manageDonationBtn);
+                manageReqBtn);
         
-        root.getChildren().addAll(
-                navBar,
-                content);
+        root.getChildren().addAll(content);
         
         Scene scene = new Scene(root, 1000, 700);
         primaryStage.setScene(scene);
@@ -259,6 +191,7 @@ public class AdminPage extends Application {
     
     Stage s = modal(owner,"Manage Pets");
     ObservableList<Pet> pets = FXCollections.observableArrayList(PetManager.getAllPets());
+    pets.addAll(PetManager.getAllPets());
     TableView<Pet> table = new TableView<>(pets);
     table.setPlaceholder(new Label("No pets yet.")); table.setPrefHeight(220);
     petCol(table, "ID", p -> p.getPetID());
