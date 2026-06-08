@@ -10,6 +10,9 @@ import javafx.stage.Stage;
 
 public class FavouritePage extends Application {
 
+    public FavouritePage(String string, String string2) {
+        }
+
     @Override
     public void start(Stage primaryStage) {
         
@@ -41,7 +44,6 @@ public class FavouritePage extends Application {
         Button btnRehome = createNavButton("Rehome", navBtnStyle);
         Button btnAdopt = createNavButton("Adoption" , navBtnStyle);
         Button btnDonation = createNavButton("Donation", navBtnStyle);
-        Button btnAbout = createNavButton("About", navBtnStyle);
         Button btnAdmin = createNavButton(
                         "Admin", 
                         "-fx-background-color: transparent;" +
@@ -55,7 +57,6 @@ public class FavouritePage extends Application {
                 btnRehome, 
                 btnAdopt,
                 btnDonation,
-                btnAbout,
                 btnAdmin);
         
         Region spacer = new Region();
@@ -145,6 +146,14 @@ public class FavouritePage extends Application {
     
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public String getUserID() {
+        throw new UnsupportedOperationException("Unimplemented method 'getUserID'");
+    }
+
+    public String getPetID() {
+        throw new UnsupportedOperationException("Unimplemented method 'getPetID'");
     }
 
 }
