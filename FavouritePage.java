@@ -1,88 +1,76 @@
 package com.example;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class FavouritePage extends Application {
 
-    public FavouritePage(String string, String string2) {
-        }
+    private String userID;
+    private String petID;
+
+    // ObservableList to hold the favourite pets for display in the TableView
+    private ObservableList<Pet> favList = FXCollections.observableArrayList();
+
+    // Internal list to manage the favourite pets (not directly used for TableView but can be useful for logic)
+    private ArrayList<FavouritePage> internalFavList = new ArrayList<>();
+    private FileHandler fileHandler = new FileHandler();
+
+    public FavouritePage(String userID, String petID) {
+        // Initialize the favourite page with user and pet information
+        this.userID = userID;
+        this.petID = petID;
+    }
 
     @Override
     public void start(Stage primaryStage) {
+
+        // Load existing favourites from the file to ensure we have the latest data
+        internalFavList = fileHandler.loadFav();
+        
+        // Check if the current pet is already in the favourites
+        if (this.petID != null && this.userID != null) {
+            boolean isexist = false;
+            for (FavouritePage f : internalFavList) {
+                if (f.getUserID().equalsIgnoreCase(this.userID) && f.getPetID().equalsIgnoreCase(this.petID)) {
+                    isexist = true;
+                    break;
+                }
+            }
+            if (!isexist) {
+                internalFavList.add(this);
+                // save the updated favourites list to the file after adding a new favourite
+                fileHandler.saveFav(internalFavList);
+            }
+        }
+
+        // populate favList with Pet objects corresponding to the favourite records of the user
+        favList.clear();
+        for (FavouritePage favRecord : internalFavList) {
+            for (Pet pet : PetManager.getAllPets()) {
+                if (pet.getPetID().equalsIgnoreCase(favRecord.getPetID())) {
+                    favList.add(pet);
+                    break;
+                }
+            }
+        }
         
         VBox root = new VBox(20);
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: #838F58;");
         
-        // nav bar 
-        HBox navBar = new HBox();
-        navBar.setAlignment(Pos.CENTER_LEFT);
-        navBar.setPadding(new Insets(10,20,10,20));
-        navBar.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-border-color: #F9D1D9;" +
-                "-fx-border-width: 2;" +
-                "-fx-border-radius: 30;" +
-                "-fx-background-radius: 30;");
-        
-        HBox linkBox = new HBox(25);
-        String navBtnStyle = 
-                "-fx-background-color: transparent;" +
-                "-fx-text-fill: #333333;" +
-                "-fx-font-weight: bold;" +
-                "-fx-font-size: 14px;" +
-                "-fx-cursor: hand;";
-        
-        // in navBar button(s)
-        Button btnHome = createNavButton("Home", navBtnStyle);
-        Button btnRehome = createNavButton("Rehome", navBtnStyle);
-        Button btnAdopt = createNavButton("Adoption" , navBtnStyle);
-        Button btnDonation = createNavButton("Donation", navBtnStyle);
-        Button btnAdmin = createNavButton(
-                        "Admin", 
-                        "-fx-background-color: transparent;" +
-                        "-fx-text-fill: #838F58;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-font-size: 14px;" +
-                        "-fx-underline: true;");
-        
-        linkBox.getChildren().addAll(
-                btnHome, 
-                btnRehome, 
-                btnAdopt,
-                btnDonation,
-                btnAdmin);
-        
-        Region spacer = new Region();
-       
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        
-        TextField txtSearch = new TextField();
-        txtSearch.setPromptText("🔍 Search...");
-        txtSearch.setStyle(
-                        "-fx-background-color: white;" +
-                        "-fx-border-color: #F9D1D9;" +
-                        "-fx-border-radius: 20;" +
-                        "-fx-background-radius: 20;");
-        
-        Button btnProfile = new Button("👤");
-        btnProfile.setStyle(
-                        "-fx-background-color: #F9D1D9;" +
-                        "-fx-text-fill: white;" +  
-                        "-fx-background-radius: 50em;");
-        
-        HBox rightBox = new HBox(15);
-        rightBox.getChildren().addAll(txtSearch,btnProfile);
-        navBar.getChildren().addAll(linkBox, spacer, rightBox);
-        
+        HBox navBar = Navigation.NavBar(primaryStage, "Favourites", null);
+
         // FavouritePage contents
-        
         VBox content = new VBox(20);
         content.setPadding(new Insets(30));
         content.setAlignment(Pos.CENTER);
@@ -90,28 +78,34 @@ public class FavouritePage extends Application {
         "-fx-background-color: #F9D1D9;" +
                 "-fx-background-radius: 20;");
         
+                // Title label with enhanced styling
         Label lblTitle = new Label("My Favourite Pets");
         lblTitle.setStyle(
                 "-fx-font-size: 30px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: white;");
+                "-fx-text-fill: #838F58;");
         
-        TableView<String> favTable = new TableView<>();
+        TableView<Pet> favTable = new TableView<>();
         favTable.setPrefHeight(400);
         
-        TableColumn<String, String> petNameCol =
-                new TableColumn<>("Pet Name");
+        // Define columns for the TableView and bind them to the Pet properties
+        TableColumn<Pet, String> petIDCol = new TableColumn<>("Pet ID");
+        petIDCol.setCellValueFactory(new PropertyValueFactory<>("petID"));
         
-        TableColumn<String, String> petBreedCol =
-                new TableColumn<>("Breed");
+        TableColumn<Pet, String> petBreedCol = new TableColumn<>("Breed");
+        petBreedCol.setCellValueFactory(new PropertyValueFactory<>("petBreed"));
         
-        TableColumn<String, String> petAgeCol =
-                new TableColumn<>("Age");
+        TableColumn<Pet, Integer> petAgeCol = new TableColumn<>("Age");
+        petAgeCol.setCellValueFactory(new PropertyValueFactory<>("petAge"));
         
-        favTable.getColumns().addAll(
-                petNameCol, 
-                petBreedCol,
-                petAgeCol);
+        TableColumn<Pet, String> petGenderCol = new TableColumn<>("Gender");
+        petGenderCol.setCellValueFactory(new PropertyValueFactory<>("petGender"));
+
+        // Add columns to the TableView
+        favTable.getColumns().addAll(petIDCol, petBreedCol, petAgeCol, petGenderCol);
+        
+        // Set the items for the TableView using the favList ObservableList
+        favTable.setItems(favList);
         
         Button removeBtn = new Button("Remove");
         removeBtn.setStyle(
@@ -120,8 +114,23 @@ public class FavouritePage extends Application {
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 10;");
         
+        // Event handler for the Remove button to delete the selected favourite pet from the list and update the file
         removeBtn.setOnAction(e -> {
-            System.out.println("Favourite removed.");
+            Pet selectedPet = favTable.getSelectionModel().getSelectedItem();
+            if (selectedPet != null) {
+                // Remove from UI list 
+                favList.remove(selectedPet);
+                
+                // Remove from internal list
+                internalFavList.removeIf(f -> f.getPetID().equalsIgnoreCase(selectedPet.getPetID()));
+                
+                // Save the updated favourites list to the file after removal
+                fileHandler.saveFav(internalFavList);
+                
+                System.out.println("Favourite removed and saved: " + selectedPet.getPetID());
+            } else {
+                System.out.println("No pet selected to remove.");
+            }
         });
         
         content.getChildren().addAll(
@@ -148,12 +157,14 @@ public class FavouritePage extends Application {
         launch(args);
     }
 
+    // Getter for userID to allow external access if needed
     public String getUserID() {
-        throw new UnsupportedOperationException("Unimplemented method 'getUserID'");
+        return this.userID;
     }
 
+    // Getter for petID to allow external access if needed
     public String getPetID() {
-        throw new UnsupportedOperationException("Unimplemented method 'getPetID'");
+        return this.petID;
     }
 
 }
