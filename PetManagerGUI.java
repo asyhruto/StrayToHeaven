@@ -86,8 +86,28 @@ public class PetManagerGUI extends Application {
         traitsLabel.setStyle("-fx-font-size: 16px; -fx-font-style: italic; -fx-text-fill: #2D3748;");
         statusLabel.setStyle("-fx-background-color: #F9D1D9; -fx-text-fill: #838F58; -fx-padding: 6px 16px; -fx-background-radius: 10px; -fx-font-weight: bold;");
 
+        // --- Add to Favourite ---
+        Button btnAddToFavourite = new Button("⭐ Add to Favourite");
+        btnAddToFavourite.setStyle("-fx-background-color: #838F58; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6px 16px; -fx-background-radius: 10px; -fx-cursor: hand;");
+        btnAddToFavourite.setOnAction(e -> {
+            if (!data.isEmpty()) {
+                Pet currentPet = data.get(currentPetIndex);
+                try {
+                    // open the favourite page and pass the current pet's ID and a dummy user ID (e.g., "user_123") to associate the favourite with a specific user
+                    FavouritePage favouritePage = new FavouritePage("user_123", currentPet.getPetID());
+                    favouritePage.start(stage);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        // assemble the status label and favourite button together in a horizontal box for better layout
+        HBox statusAndFavBox = new HBox(12, statusLabel, btnAddToFavourite);
+        statusAndFavBox.setAlignment(Pos.CENTER_LEFT);
+
         // Assemble text elements together
-        textContainer.getChildren().addAll(idLabel, breedLabel, ageLabel, genderLabel, traitsLabel, statusLabel);
+        textContainer.getChildren().addAll(idLabel, breedLabel, ageLabel, genderLabel, traitsLabel, statusAndFavBox);
         
         // Assemble Picture (Left) and Text Container (Right) inside the card
         profileCard.getChildren().addAll(petImageView, textContainer);
@@ -120,11 +140,12 @@ public class PetManagerGUI extends Application {
         Button openAddFormButton = new Button("➕ New Animal");
         openAddFormButton.getStyleClass().add("add-button");
         openAddFormButton.setOnAction(e -> openAddPetFormPage(stage));
+        
 
         // Layout to arrange the pagination and registration elements cleanly
         HBox controlRow = new HBox(20, prevButton, openAddFormButton, nextButton);
         controlRow.setAlignment(Pos.CENTER);
-        
+       
         // --- MAIN ASSEMBLY ---
         // The main content area is structured with the header at the top, the profile card in the center, and the control buttons at the bottom, all wrapped in a ScrollPane to ensure accessibility on smaller screens or when content exceeds the fixed size of the window
         VBox mainContent = new VBox(25, headerBar, profileCard, controlRow);
