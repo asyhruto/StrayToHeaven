@@ -64,13 +64,12 @@ public class Navigation {
         Button btRehome = new Button("Rehome");
         Button btAdopt = new Button("Adopt");
         Button btDonate = new Button("Donation");
-        Button btAbout = new Button("About");
         Button btLogout = new Button("Logout");
         
         String navLinkStyle = "-fx-background-color: transparent; -fx-text-fill: #4A4A4A; -fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand;";
         String activeStyle = "-fx-background-color: transparent; -fx-text-fill: #838F58; -fx-font-weight: bold; -fx-font-size: 13px; -fx-underline: true; -fx-cursor: hand;";
         
-        Button[] menu = {btHome, btAdopt, btRehome, btDonate, btAbout, btLogout};
+        Button[] menu = {btHome, btAdopt, btRehome, btDonate, btLogout};
         for (Button btn : menu){
             btn.setStyle(navLinkStyle);
             
@@ -79,12 +78,10 @@ public class Navigation {
                                (btn == btRehome && activeMenu.equalsIgnoreCase("Rehome")) ||
                                (btn == btAdopt && activeMenu.equalsIgnoreCase("Adopt")) ||
                                (btn == btDonate && activeMenu.equalsIgnoreCase("Donation")) ||
-                               (btn == btAbout && activeMenu.equalsIgnoreCase("About")) ||
                                (btn == btLogout && !activeMenu.equalsIgnoreCase("Home") && 
                                                    !activeMenu.equalsIgnoreCase("Rehome") && 
                                                    !activeMenu.equalsIgnoreCase("Adopt") && 
-                                                   !activeMenu.equalsIgnoreCase("Donation") && 
-                                                   !activeMenu.equalsIgnoreCase("About"));
+                                                   !activeMenu.equalsIgnoreCase("Donation"));
             
             // Only attach programmatic mouse hover interactions to non-active buttons
             if (!isActive) {
@@ -109,9 +106,6 @@ public class Navigation {
         }
         else if (activeMenu.equalsIgnoreCase("Donation")) {
             btDonate.setStyle(activeStyle);
-        }
-        else if (activeMenu.equalsIgnoreCase("About")) {
-            btAbout.setStyle(activeStyle);
         }
         else {
             btLogout.setStyle(activeStyle);
@@ -141,7 +135,7 @@ public class Navigation {
         });
         
         rightNav.getChildren().addAll(search, profile);
-        navBar.getChildren().addAll(logoView, btHome, btRehome, btAdopt, btDonate, btAbout, btLogout, spacer, rightNav);
+        navBar.getChildren().addAll(logoView, btHome, btRehome, btAdopt, btDonate, btLogout, spacer, rightNav);
         
         // Action routing rules to process structural interface state switches
         btHome.setOnAction((ActionEvent e) -> {
