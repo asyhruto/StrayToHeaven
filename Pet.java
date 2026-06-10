@@ -1,43 +1,46 @@
 package com.example;
-//using arraylist and list to manage the pets in the shelter
-import java.util.*;
 
-public class PetManager {
-    private static List<Pet> petList = new ArrayList<>();
+public class Pet {
+    private String petID;
+    private int petAge;
+    private String petBreed;
+    private String petGender;
+    private String petTraits;
+    private String petStatus;
 
-    //method to add a pet to the shelter
-    public PetManager() {
-        // Constructor logic if needed
+    // Constructor to create a new pet with the provided details, allowing for pet management and tracking within the shelter system.
+    public Pet(String petID, int petAge, String petBreed, String petGender, String petTraits, String petStatus) {
+        this.petID = petID;
+        this.petAge = petAge;
+        this.petBreed = petBreed;
+        this.petGender = petGender;
+        this.petTraits = petTraits;
+        this.petStatus = petStatus;
     }
 
-    public static List<Pet> getAllPets() {
-        return petList;
+    //Getters for JAVAFX TableView compatibility
+    public String getPetID() {
+        return petID;
+    }
+    public int getPetAge() {
+        return petAge;
+    }
+    public String getPetBreed() {
+        return petBreed;
+    }
+    public String getPetGender() {
+        return petGender;
+    }
+    public String getPetTraits() {
+        return petTraits;
+    }
+    public String getPetStatus() {
+        return petStatus;
     }
 
-    public static void addPet ( Pet pet) {
-        petList.add(pet);
-        System.out.println("Pet added successfully!");
+    // Update the status and track current state of the pet (e.g., Available, Adopted, Rehomed)
+    public void updateStatus(String newStatus) {
+        this.petStatus = newStatus;
     }
 
-    public static void updatePetStatus(String petID, String newStatus) {
-        for (Pet pet : petList) {
-            if (pet.getPetID().equals(petID)) {
-                pet.updateStatus(newStatus); 
-                System.out.println("Pet " + petID + " status updated to: " + newStatus);
-                return;
-            }
-        }
-        System.out.println("Error: Pet ID " + petID + " not found!");
-    }
-
-    public static void deletePetInfo (String petID) {
-        for (Pet pet : petList) {
-            if (pet.getPetID().equals(petID)) {
-                petList.remove(pet);
-                System.out.println("Pet deleted successfully!");
-                return;
-            }
-        }
-        System.out.println("Pet not found!");
-    }
 }
