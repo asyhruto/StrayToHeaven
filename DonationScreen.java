@@ -1,4 +1,4 @@
-package com.mycompany.ooprehome;
+package com.example;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -35,6 +35,7 @@ public class DonationScreen extends Application {
         Label lblHeader = new Label("Support Our Strays 🐾");
         lblHeader.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;");
         
+        // subtitle with enhanced styling
         Label lblSubtitle = new Label("Every Ringgit saves a life.");
         lblSubtitle.setStyle("-fx-font-size: 15px; -fx-text-fill: white; -fx-padding: 0 0 10 0;");
 
@@ -43,6 +44,7 @@ public class DonationScreen extends Application {
         form.setHgap(20); form.setVgap(15);
         form.setAlignment(Pos.CENTER);
 
+        // consistent styling for all input fields and labels
         String inputStyle = "-fx-background-color: white; -fx-border-color: #838F58; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 10; -fx-pref-width: 250; -fx-font-size: 14px;";
         String labelStyle = "-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px;";
         String radioStyle = "-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;";
@@ -54,6 +56,7 @@ public class DonationScreen extends Application {
         txtAmount.setPromptText("e.g. 50.00"); 
         txtAmount.setStyle(inputStyle);
         
+        // frequency label
         Label lblFreq = new Label("Frequency:");
         lblFreq.setStyle(labelStyle);
         
@@ -64,6 +67,7 @@ public class DonationScreen extends Application {
         rbOneTime.setToggleGroup(freqGroup);
         rbOneTime.setSelected(true); // default option
         
+        // monthly option with the same styling
         RadioButton rbMonthly = new RadioButton("Monthly");
         rbMonthly.setStyle(radioStyle);
         rbMonthly.setToggleGroup(freqGroup);
@@ -130,7 +134,7 @@ public class DonationScreen extends Application {
                 // create dummy user and process donation
                 User dummy = new User("Guest", "guest@mail.com", "pass", "U001");
                 // just putting today's date manually for the backend
-                Donation donation = new Donation("D100", dummy, amount, "2026-05-29");
+                Donation donation = new Donation("D100", dummy, amount, "2024-05-29");
                 donation.processDonation();
                 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -143,7 +147,11 @@ public class DonationScreen extends Application {
         });
 
         contentArea.getChildren().addAll(lblHeader, lblSubtitle, form, btnSubmit);
-        root.getChildren().addAll(navBar, contentArea);
+        
+        ScrollPane scrollPane = new ScrollPane(contentArea);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-control-inner-background: #838F58; -fx-padding: 0;");
+        root.getChildren().addAll(navBar, scrollPane);
 
         primaryStage.setScene(new Scene(root, 950, 600)); 
         primaryStage.setTitle("Strays To Heaven - Donation Portal");
