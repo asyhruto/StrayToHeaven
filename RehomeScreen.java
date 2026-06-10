@@ -1,4 +1,4 @@
-package com.mycompany.ooprehome;
+package com.example;
 
 import java.io.File;
 import javafx.application.Application;
@@ -22,7 +22,7 @@ public class RehomeScreen extends Application {
 
     public void start(Stage primaryStage, UI mainApp) {
         
-        // background 
+        // background and main container
         VBox root = new VBox(20);
         root.setPadding(new Insets(20, 20, 20, 20));
         root.setStyle("-fx-background-color: #838F58;"); 
@@ -38,6 +38,7 @@ public class RehomeScreen extends Application {
         contentArea.setPadding(new Insets(40));
         contentArea.setStyle("-fx-background-color: #F9D1D9; -fx-background-radius: 20;");
 
+        // catchy header
         Label lblHeader = new Label("Rehome a Pet");
         lblHeader.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;");
         
@@ -68,22 +69,26 @@ public class RehomeScreen extends Application {
         VBox imageSection = new VBox(10, imageBox, btnUpload);
         imageSection.setAlignment(Pos.CENTER);
 
-        // the input forms
+        // the big detailed input forms
         GridPane form = new GridPane();
         form.setHgap(15); form.setVgap(15);
         form.setAlignment(Pos.CENTER);
 
+        // input styling
         String inputStyle = "-fx-background-color: white; -fx-border-color: #838F58; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 8; -fx-pref-width: 200;";
 
+        // form fields for pet details
         TextField txtName = new TextField(); txtName.setPromptText("Pet Name (e.g. Luna)"); txtName.setStyle(inputStyle);
         TextField txtBreed = new TextField(); txtBreed.setPromptText("Pet Breed (e.g. Scottish Fold)"); txtBreed.setStyle(inputStyle);
         TextField txtAge = new TextField(); txtAge.setPromptText("Pet Age (e.g. 3)"); txtAge.setStyle(inputStyle);
         
+        // dropdown for gender selection
         ComboBox<String> cbGender = new ComboBox<>();
         cbGender.getItems().addAll("Male", "Female");
         cbGender.setPromptText("Select Gender");
         cbGender.setStyle(inputStyle);
 
+        // add form fields to the grid layout
         form.add(txtName, 0, 0); form.add(txtBreed, 1, 0);
         form.add(txtAge, 0, 1); form.add(cbGender, 1, 1);
 
@@ -114,7 +119,12 @@ public class RehomeScreen extends Application {
         });
 
         contentArea.getChildren().addAll(lblHeader, lblSubtitle, imageSection, form, btnSubmit);
-        root.getChildren().addAll(navBar, contentArea);
+        
+        // Scroll pane for fit the area display
+        ScrollPane scrollPane = new ScrollPane(contentArea);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-control-inner-background: #838F58; -fx-padding: 0;");
+        root.getChildren().addAll(navBar, scrollPane);
 
         primaryStage.setScene(new Scene(root, 950, 600)); 
         primaryStage.setTitle("Strays To Heaven - Rehome Portal");
