@@ -44,29 +44,6 @@
 }
 
 /* Text Input Fields */
-.input-field {
-    -fx-background-radius: 5px;
-    -fx-border-color: #F9D1D9; /* light strawberry pink */
-    -fx-border-width: 2px;
-    -fx-border-radius: 5px;
-}
-
-/* Dropdown ComboBox (Matcha Green) */
-.combobox {
-    -fx-background-color: #EAECE6; /* Clean milky white card background */
-    -fx-background-radius: 5px;
-    -fx-border-color: #F9D1D9; /* Light Strawberry Pink border */
-    -fx-border-width: 2px;
-    -fx-border-radius: 5px;
-    -fx-font-weight: bold;
-}
-
-.combobox .label, .combobox .cell {
-    -fx-text-fill: #838F58; /* Soft Matcha Green */
-    -fx-font-weight: bold;
-}
-
-/* Primary Action Button "Add Pet" */
 .add-button {
     -fx-background-color: #F9D1D9; /* Light Strawberry Pink */
     -fx-background-radius: 5px;
