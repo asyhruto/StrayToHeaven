@@ -1,9 +1,8 @@
-package com.mycompany.ooprehome;
+package com.example;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class Donation {
-
     private String donationID;
     private User donor;
     private double donationAmount;
@@ -44,5 +43,3 @@ public void processDonation() {
         }
     }
 }
-
-
