@@ -81,6 +81,7 @@ public class UI extends Application {
             System.out.println("Warning: catContainer.jfif not found in images/ folder!");
         }
         
+        // Display the cat container image if it was loaded successfully
         ImageView catView = new ImageView(catContImg);
         catView.setFitWidth(340);
         catView.setFitHeight(380);
@@ -91,6 +92,7 @@ public class UI extends Application {
         clip.setArcHeight(40);
         catView.setClip(clip);
         
+        // Cat Picture to display on the left side of the login screen
         catCont.getChildren().add(catView);
         leftside.getChildren().add(catCont);
         
@@ -103,6 +105,7 @@ public class UI extends Application {
         loginForm.setStyle("-fx-background-color: rgba(249, 209, 217, 0.9); -fx-background-radius: 0 25 25 0;");
         loginForm.setAlignment(Pos.CENTER_LEFT);
         
+        // Title and input fields for the login form with enhanced styling for a more polished and user-friendly interface
         Text formTitle = new Text("Login");
         formTitle.setFont(Font.font("Tahoma", FontWeight.BOLD, 28));
         formTitle.setFill(Color.web("#838F58"));
@@ -110,6 +113,7 @@ public class UI extends Application {
         
         String inputFieldStyle = "-fx-background-color: transparent; -fx-border-color: transparent transparent #4A4A4A transparent; -fx-border-width: 1; -fx-text-fill: #333333; -fx-padding: 4 0 4 0; -fx-font-size: 14px;";
         
+        // Email and password fields with labels
         Label emailLabel = new Label("Email: ");
         emailLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
         loginForm.getChildren().add(emailLabel);
@@ -118,6 +122,7 @@ public class UI extends Application {
         emailInput.setStyle(inputFieldStyle);
         loginForm.getChildren().add(emailInput);
 
+        // Password field with label
         Label pw = new Label("Password:");
         pw.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
         loginForm.getChildren().add(pw);
@@ -126,6 +131,7 @@ public class UI extends Application {
         pwInput.setStyle(inputFieldStyle);
         loginForm.getChildren().add(pwInput);
 
+        // login and cancel buttons for login page
         Button login = new Button("LOGIN");
         login.setStyle(MATCHA);
         Button cancel = new Button("CANCEL");
@@ -140,6 +146,8 @@ public class UI extends Application {
         loginForm.getChildren().add(actiontarget);
         
         mainCont.getChildren().addAll(leftside, loginForm);
+
+        // Event handler for the Login button to validate user credentials and navigate to the appropriate dashboard based on the user's role (admin or regular user), providing feedback on login success or failure for a seamless user experience.
         login.setOnAction((ActionEvent e) -> {
             String email = emailInput.getText();
             String password = pwInput.getText();
@@ -156,7 +164,8 @@ public class UI extends Application {
             }
         });
         
-            cancel.setOnAction((ActionEvent e)-> {
+        // Event handler for the Cancel button to clear the input fields and reset the form
+        cancel.setOnAction((ActionEvent e)-> {
             actiontarget.setFill(Color.WHITE);
             actiontarget.setText("Cancel and clear details");
             
@@ -170,6 +179,7 @@ public class UI extends Application {
         window.show();
     }
 
+    //Main dashboard UI
     public void DashboardUI(){
         BorderPane mainRoot = new BorderPane();
         mainRoot.setStyle(MATCHA_BG);
@@ -202,13 +212,11 @@ public class UI extends Application {
         HBox actionBt = new HBox(20);
         actionBt.setAlignment(Pos.CENTER);
         
-        Button adoptNow = new Button("Adopt Now");
-        adoptNow.setStyle("-fx-background-color: #F9D1D9; -fx-text-fill: #333333; -fx-padding: 10 25 10 25; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;");
-        
+        // Button to access PetManagerGUI page
         Button viewPetList = new Button("Pet List");
         viewPetList.setStyle("-fx-background-color: #F9D1D9; -fx-text-fill: #333333; -fx-padding: 10 25 10 25; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;");
         
-        actionBt.getChildren().addAll(adoptNow, viewPetList);
+        actionBt.getChildren().addAll(viewPetList);
         
         //display cat
         HBox petDisplay = new HBox(20);
@@ -223,6 +231,7 @@ public class UI extends Application {
             "images/animalDisp6.jfif"
         };
         
+        // Loop to create pet profile bubbles with circular images and display them in the pet display area, providing a visually appealing and engaging way to showcase the pets available for adoption on the dashboard.
         for (int i = 0; i < 6; i++){
             VBox BubblePet = new VBox(8);
             BubblePet.setAlignment(Pos.CENTER);
@@ -259,12 +268,8 @@ public class UI extends Application {
         
         
         
-        adoptNow.setOnAction((ActionEvent e) -> {
-            AdoptionUI();
-        });
-        
         viewPetList.setOnAction((ActionEvent e) -> {
-            PetManagerGUI petPage = new PetManagerGUI();
+            PetManagerGUI petPage = new PetManagerGUI(mockUser.getUserID());
             petPage.start(window, this);
         });
         
@@ -274,14 +279,22 @@ public class UI extends Application {
         window.setHeight(600);
     }
     
+    // Adoption request form UI
     public void AdoptionUI(){
+        AdoptionUI(null);
+    }
+
+    // Pet request ID prefill
+    public void AdoptionUI(String prefillPetID){
         
-        //navBar
+        // Main Container
         BorderPane mainRoot = new BorderPane();
         mainRoot.setStyle(MATCHA_BG);
         
+        // Navigation bar 
         HBox navBar = Navigation.NavBar(window, "Adopt", this);
         
+        // Top container to hold the navigation bar with proper padding and alignment
         VBox topCont = new VBox();
         topCont.setPadding(new Insets(15, 15, 0, 15));
         topCont.getChildren().add(navBar);
@@ -294,6 +307,7 @@ public class UI extends Application {
         form.setStyle("-fx-background-color: rgba(249, 209, 217, 0.95); -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 5);");
         form.setAlignment(Pos.CENTER);
         
+        // Title and input fields for the adoption request form
         Text title = new Text("ADOPTION REQUEST");
         title.setFont(Font.font("Tahoma", FontWeight.BOLD, 22));
         title.setFill(Color.web("#838F58"));
@@ -304,6 +318,9 @@ public class UI extends Application {
         reqLabel.setTextAlignment(CENTER);
         
         TextField petIDField = new TextField();
+        if (prefillPetID != null && !prefillPetID.isBlank()) {
+            petIDField.setText(prefillPetID);
+        }
         petIDField.setPromptText("e.g. PET101");
         petIDField.setMaxWidth(200);
         petIDField.setStyle("-fx-padding: 8; -fx-background-radius: 5;");
@@ -358,6 +375,11 @@ public class UI extends Application {
         window.setScene(new Scene(mainRoot, 950, 600));
     }
     
+    public void FavouriteUI(){
+        FavouritePage favPage = new FavouritePage(mockUser.getUserID(), null);
+        favPage.start(window, this);
+    }
+    
     public void DonationUI(){
         DonationScreen donationPage = new DonationScreen();
         donationPage.start(window, this);
@@ -365,6 +387,6 @@ public class UI extends Application {
     
     public void AdminDashboardUI(){
         AdminPage adminPage = new AdminPage();
-        adminPage.start(window);
+        adminPage.start(window, this);
     }
 }
