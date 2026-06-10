@@ -22,6 +22,8 @@ import javafx.util.Duration;
  */
 public class PetManagerGUI extends Application {
 
+    private String currentUserID;
+
     // Core data management and state tracking variables
     private ObservableList<Pet> data = FXCollections.observableArrayList();
     private int currentPetIndex = 0; // Tracks which animal is currently being displayed
@@ -42,27 +44,45 @@ public class PetManagerGUI extends Application {
 
     // Variable to store the file path of the uploaded pet image, allowing it to be associated with the pet's profile
     private String savedImagePath;
+    private UI mainApp;
 
-    
+    // PetManagerGUI constructors for current user tracking
+    public PetManagerGUI() {
+        this.currentUserID = "guest";
+    }
+
+    public PetManagerGUI(String currentUserID) {
+        this.currentUserID = currentUserID == null ? "guest" : currentUserID;
+    }
+
     public void start(Stage stage, UI mainApp) {
+        this.mainApp = mainApp;
 
         stage.setTitle("Strays To Heaven - Pet Management Dashboard");
 
         HBox headerBar = Navigation.NavBar(stage, "Home", mainApp);
 
-        // --- PRELOADED DUMMY DATA ---
+        // Data for pets
         Pet pet1 = new Pet("C001", 2, "British Shorthair", "Female", "Calm, Friendly", "Available");
         Pet pet2 = new Pet("D001", 1, "Golden Retriever", "Male", "Playful, Energetic", "Available");
         Pet pet3 = new Pet("C002", 4, "Persian", "Male", "Lazy, Fluffy", "Available");
 
-        PetManager.addPet(pet1);
-        PetManager.addPet(pet2);
-        PetManager.addPet(pet3);
+        // prevent duplicate entries for pets
+        if (PetManager.findPetByID("C001") == null) {
+            PetManager.addPet(pet1);
+        }
+        if (PetManager.findPetByID("D001") == null) {
+            PetManager.addPet(pet2);
+        }
+        if (PetManager.findPetByID("C002") == null) {
+            PetManager.addPet(pet3);
+        }
 
+        // Load all pets from the PetManager into the observable list for display
         data.clear();
         data.addAll(PetManager.getAllPets());
 
-        // --- SIDE-BY-SIDE PROFILE CARD CONTAINER ---
+        // Pets profile card layout and styling
         profileCard.getStyleClass().add("pet-profile-card");
         profileCard.setAlignment(Pos.CENTER); 
         profileCard.setPadding(new Insets(25)); 
@@ -86,16 +106,16 @@ public class PetManagerGUI extends Application {
         traitsLabel.setStyle("-fx-font-size: 16px; -fx-font-style: italic; -fx-text-fill: #2D3748;");
         statusLabel.setStyle("-fx-background-color: #F9D1D9; -fx-text-fill: #838F58; -fx-padding: 6px 16px; -fx-background-radius: 10px; -fx-font-weight: bold;");
 
-        // --- Add to Favourite ---
-        Button btnAddToFavourite = new Button("⭐ Add to Favourite");
-        btnAddToFavourite.setStyle("-fx-background-color: #838F58; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6px 16px; -fx-background-radius: 10px; -fx-cursor: hand;");
+        // Add to favourite button
+        Button btnAddToFavourite = new Button("+ Add to Favourite");
+        btnAddToFavourite.setStyle("-fx-background-color: #F9D1D9; -fx-text-fill: #838F58; -fx-font-weight: bold; -fx-padding: 6px 16px; -fx-background-radius: 10px; -fx-cursor: hand;");
         btnAddToFavourite.setOnAction(e -> {
             if (!data.isEmpty()) {
                 Pet currentPet = data.get(currentPetIndex);
                 try {
-                    // open the favourite page and pass the current pet's ID and a dummy user ID (e.g., "user_123") to associate the favourite with a specific user
-                    FavouritePage favouritePage = new FavouritePage("user_123", currentPet.getPetID());
-                    favouritePage.start(stage);
+                    // open the favourite page and pass the current logged-in user's ID
+                    FavouritePage favouritePage = new FavouritePage(currentUserID, currentPet.getPetID());
+                    favouritePage.start(stage, mainApp);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -137,13 +157,13 @@ public class PetManagerGUI extends Application {
         });
 
         // Button to open the Add Pet form, styled consistently with the rest of the UI
-        Button openAddFormButton = new Button("➕ New Animal");
-        openAddFormButton.getStyleClass().add("add-button");
-        openAddFormButton.setOnAction(e -> openAddPetFormPage(stage));
+        Button btnAdopt = new Button("Adopt Me!");
+        btnAdopt.getStyleClass().add("add-button");
+        btnAdopt.setOnAction(e -> openAdoptionRequest(stage, data.isEmpty() ? null : data.get(currentPetIndex).getPetID()));
         
 
         // Layout to arrange the pagination and registration elements cleanly
-        HBox controlRow = new HBox(20, prevButton, openAddFormButton, nextButton);
+        HBox controlRow = new HBox(20, prevButton, btnAdopt, nextButton);
         controlRow.setAlignment(Pos.CENTER);
        
         // --- MAIN ASSEMBLY ---
@@ -226,6 +246,7 @@ public class PetManagerGUI extends Application {
                 imageName = "images/" + pet.getPetID().toLowerCase() + ".jpg"; 
             }
 
+            // Attempt to load the image from the resources folder, and if it fails, set the ImageView to null to avoid displaying a broken image icon
             try {
                 java.net.URL imgUrl = getClass().getResource(imageName);
                 if (imgUrl != null) {
@@ -237,129 +258,16 @@ public class PetManagerGUI extends Application {
             } catch (Exception e) {
                 petImageView.setImage(null);
             }
-            }
         }
+    }
 
-    // --- SECONDARY UI FORM POP-UP ---
-    private void openAddPetFormPage(Stage parentStage) {
-        Stage formStage = new Stage();
-        formStage.setTitle("Register New Stray Animal");
-        formStage.initModality(Modality.WINDOW_MODAL);
-        formStage.initOwner(parentStage);
-
-        // Form fields with consistent styling and clear prompts for user input
-        Label titleLabel = new Label("ANIMAL REGISTRATION FORM");
-        titleLabel.setMaxWidth(Double.MAX_VALUE);
-        titleLabel.setAlignment(Pos.CENTER);
-        titleLabel.getStyleClass().add("form-title");
-
-        // upload pet picture
-        ImageView petImageView = new ImageView();
-        petImageView.setFitWidth(150); petImageView.setFitHeight(150);
-        petImageView.setPreserveRatio(true);
-        
-        // The image box is styled to match the profile card for a cohesive look, and includes a button to allow users to upload a picture of the pet they are registering
-        StackPane imageBox = new StackPane(petImageView);
-        imageBox.setPrefSize(160, 160); imageBox.setMaxSize(160, 160);
-        imageBox.getStyleClass().add("pet-profile-card"); // Reuse the same styling as the profile card for a cohesive look
-        
-        // Button to trigger the file chooser for uploading a pet picture, styled to match the application's design language
-        Button btnUpload = new Button("Add Picture");
-        btnUpload.getStyleClass().add("add-button");
-        btnUpload.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
-            File file = fileChooser.showOpenDialog(formStage);
-            if (file != null) {
-                savedImagePath = file.getAbsolutePath();
-                petImageView.setImage(new Image(file.toURI().toString()));
-            }
-        });
-        // Layout for the image upload section, centering the image preview and upload button together
-        VBox imageSection = new VBox(10, imageBox, btnUpload);
-        imageSection.setAlignment(Pos.CENTER);
-
-        // Input fields for pet details, styled with CSS classes for a cohesive look
-        TextField idInput = new TextField();
-        idInput.setPromptText("Pet ID (e.g., C001)");
-        idInput.getStyleClass().add("input-field");
-
-        // Age input field with validation for numeric input, styled consistently with other fields
-        TextField ageInput = new TextField();
-        ageInput.setPromptText("Pet Age (e.g., 3)");
-        ageInput.getStyleClass().add("input-field");
-
-        // Breed input field for the pet's breed, styled with the same CSS class for uniform
-        TextField breedInput = new TextField();
-        breedInput.setPromptText("Pet Breed (e.g., Shorthair)");
-        breedInput.getStyleClass().add("input-field");
-
-        // Gender
-        ComboBox<String> genderInput = new ComboBox<>();
-        genderInput.getItems().addAll("Male", "Female");
-        genderInput.setPromptText("Select Gender");
-        genderInput.setMaxWidth(Double.MAX_VALUE); 
-        genderInput.getStyleClass().add("combobox");
-
-        // Traits input field for the pet's personality traits, styled consistently with other input fields
-        TextField traitsInput = new TextField();
-        traitsInput.setPromptText("Pet Traits (e.g., Playful)");
-        traitsInput.getStyleClass().add("input-field");
-
-        // Save button to submit the form, styled to match the application's design language
-        Button saveButton = new Button("Save Record");
-        saveButton.getStyleClass().add("add-button");
-        saveButton.setMaxWidth(Double.MAX_VALUE);
-
-        // Event handler for the save button to create a new pet record and update the main profile display
-        saveButton.setOnAction(e -> {
-            try {
-                Pet newPet = new Pet(
-                        idInput.getText(), 
-                        Integer.parseInt(ageInput.getText()), 
-                        breedInput.getText(),
-                        genderInput.getValue() != null ? genderInput.getValue() : "",
-                        traitsInput.getText(),
-                        "Available"
-                );
-
-                PetManager.addPet(newPet);
-                data.add(newPet);
-                
-                // Set index to point directly to the newly added animal profile
-                currentPetIndex = data.size() - 1;
-                updateProfileCardDisplay();
-                
-                formStage.close();
-            } catch (NumberFormatException ex) {
-                System.out.println("Invalid input for age.");
-            }
-        });
-
-        // Layout for the form content, using a VBox to stack elements vertically with consistent spacing and padding
-        VBox formContent = new VBox(15, titleLabel, imageSection, idInput, ageInput, breedInput, genderInput, traitsInput, saveButton);
-        formContent.setPadding(new Insets(20));
-        formContent.getStyleClass().add("root-container");
-
-        // Wrap the form content in a ScrollPane to ensure accessibility on smaller screens or when content exceeds the fixed size of the form window
-        ScrollPane formScrollPane = new ScrollPane(formContent);
-        formScrollPane.setFitToWidth(true);
-        formScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        formScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        formScrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
-
-        // Set a fixed size for the form pop-up, as the ScrollPane will handle any overflow of content gracefully
-        Scene formScene = new Scene(formScrollPane, 380, 450); // Set a fixed size for the form pop-up, as the ScrollPane will handle any overflow of content gracefully
-        
-        // Load the external CSS file for styling the form, ensuring it matches the main application's design
-        java.net.URL cssUrl = getClass().getResource("style.css");
-        if (cssUrl != null) {
-            formScene.getStylesheets().add(cssUrl.toExternalForm());
+    // Opens the adoption request page when the Adopt Me! button is clicked.
+    private void openAdoptionRequest(Stage owner, String petID) {
+        if (mainApp != null) {
+            mainApp.AdoptionUI(petID);
+        } else {
+            System.err.println("Cannot open adoption form: main UI is not available.");
         }
-        
-        // Finalize and display the form as a modal window
-        formStage.setScene(formScene);
-        formStage.showAndWait();
     }
 
     // Main method to launch the JavaFX application
