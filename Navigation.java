@@ -48,16 +48,20 @@ public class Navigation {
             System.err.println("Error loading logo: " + e.getMessage());
         }
 
+        // Navigation buttons configuration with dynamic active state styling and hover effects
         Button btHome = new Button("Home");
         Button btRehome = new Button("Rehome");
         Button btAdopt = new Button("Adopt");
         Button btDonate = new Button("Donation");
+        Button btFav = new Button("Favorites");
         Button btLogout = new Button("Logout");
         
+        // Base styles for navigation buttons and active state differentiation
         String navLinkStyle = "-fx-background-color: transparent; -fx-text-fill: #4A4A4A; -fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand;";
         String activeStyle = "-fx-background-color: transparent; -fx-text-fill: #838F58; -fx-font-weight: bold; -fx-font-size: 13px; -fx-underline: true; -fx-cursor: hand;";
         
-        Button[] menu = {btHome, btAdopt, btRehome, btDonate, btLogout};
+        // Group all navigation buttons for streamlined styling and hover effect application
+        Button[] menu = {btHome, btAdopt, btRehome, btDonate, btFav, btLogout};
         for (Button btn : menu){
             btn.setStyle(navLinkStyle);
             
@@ -95,10 +99,14 @@ public class Navigation {
         else if (activeMenu.equalsIgnoreCase("Donation")) {
             btDonate.setStyle(activeStyle);
         }
+        else if (activeMenu.equalsIgnoreCase("Favorites")) {
+            btFav.setStyle(activeStyle);
+        }
         else {
             btLogout.setStyle(activeStyle);
         }
         
+        // Spacer region to push the search and profile button to the right end of the navigation bar
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
@@ -123,7 +131,7 @@ public class Navigation {
         });
         
         rightNav.getChildren().addAll(search, profile);
-        navBar.getChildren().addAll(logoView, btHome, btRehome, btAdopt, btDonate, btLogout, spacer, rightNav);
+        navBar.getChildren().addAll(logoView, btHome, btRehome, btAdopt, btDonate,  btFav, btLogout, spacer, rightNav);
         
         // Action routing rules to process structural interface state switches
         btHome.setOnAction((ActionEvent e) -> {
@@ -161,6 +169,15 @@ public class Navigation {
             }
             else {
                 System.out.println("Error: Cannot navigate to Donation Screen.");
+            }
+        });
+
+        btFav.setOnAction((ActionEvent e) -> {
+            System.out.println("Navigating to Favorites Screen...");
+            if (mainApp != null) {
+                mainApp.FavouriteUI();
+            } else {
+                System.out.println("Error: Cannot navigate to Favorites Screen.");
             }
         });
         
