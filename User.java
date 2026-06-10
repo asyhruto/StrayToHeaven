@@ -6,6 +6,7 @@ public class User {
     private String userEmail;
     private String userPass;
 
+    // Constructor to create a new user with the provided details, allowing for user registration and management within the system.
     public User(String userID, String userName, String userEmail, String userPass) {
         this.userID = userID;
         this.userName = userName;
@@ -34,6 +35,7 @@ public class User {
         return userID;
     }
 
+    // Method to display user details, which can be used for profile viewing or administrative purposes to manage user information within the system.
     public void getDetails() {
         System.out.println("User ID: " + userID); 
         System.out.println("Name: " + userName);
