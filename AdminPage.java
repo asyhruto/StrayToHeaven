@@ -27,10 +27,7 @@ public class AdminPage extends Application {
     }
     // Final style
     private static final String adminBtnStyle = 
-                "-fx-background-color: #838F58;" 
-                + "-fx-border-radius: 10;"
-                + "-fx-border-color: #EAECE6;"
-                + "-fx-border-width: 3;"
+                "-fx-background-color: #838F58;"
                 + "-fx-text-fill: white;"
                 + "-fx-font-weight: bold;"
                 + "-fx-font-size: 16px;" 
